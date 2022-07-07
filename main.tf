@@ -2,17 +2,23 @@ resource "aws_s3_bucket" "this" {
   bucket = var.name
   policy = data.aws_iam_policy_document.bucket.json
   tags   = var.tags
+}
 
-  versioning {
-    enabled = true
+resource "aws_s3_bucket_versioning" "this" {
+  bucket = aws_s3_bucket.this.id
+
+  versioning_configuration {
+    status = "Enabled"
   }
+}
 
-  server_side_encryption_configuration {
-    rule {
-      apply_server_side_encryption_by_default {
-        kms_master_key_id = aws_kms_key.this.id
-        sse_algorithm     = "aws:kms"
-      }
+resource "aws_s3_bucket_server_side_encryption_configuration" "this" {
+  bucket = aws_s3_bucket.this.bucket
+
+  rule {
+    apply_server_side_encryption_by_default {
+      kms_master_key_id = aws_kms_key.this.id
+      sse_algorithm     = "aws:kms"
     }
   }
 }
