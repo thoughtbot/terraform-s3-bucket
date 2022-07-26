@@ -1,7 +1,11 @@
 resource "aws_s3_bucket" "this" {
   bucket = var.name
-  policy = data.aws_iam_policy_document.bucket.json
   tags   = var.tags
+}
+
+resource "aws_s3_bucket_policy" "this" {
+  bucket = aws_s3_bucket.this.id
+  policy = data.aws_iam_policy_document.bucket.json
 }
 
 resource "aws_s3_bucket_versioning" "this" {
@@ -24,7 +28,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "this" {
 }
 
 data "aws_iam_policy_document" "bucket" {
-  override_json = var.bucket_policy
+  override_policy_documents = [var.bucket_policy]
 
   statement {
     sid       = "AllowManagement"
