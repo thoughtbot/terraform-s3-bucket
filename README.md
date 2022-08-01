@@ -10,7 +10,7 @@ Example:
 
 ``` terraform
 module "bucket" {
-  source = "github.com/thoughtbot/aws-s3-bucket?ref=v0.1.0"
+  source = "github.com/thoughtbot/terraform-s3-bucket?ref=v0.2.0"
 
   name            = "my-unique-bucket-name"
   trust_principal = aws_iam_role.myservice.arn
