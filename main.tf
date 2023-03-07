@@ -28,7 +28,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "this" {
 }
 
 data "aws_iam_policy_document" "bucket" {
-  override_policy_documents = [var.bucket_policy]
+  override_policy_documents = compact([var.bucket_policy])
 
   statement {
     sid       = "AllowManagement"
