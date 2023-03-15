@@ -46,20 +46,40 @@ data "aws_iam_policy_document" "bucket" {
   }
 
   statement {
-    sid       = "AllowPrincipal"
+    sid       = "AllowWrite"
     resources = [local.bucket_arn, "${local.bucket_arn}/*"]
     actions = [
       "s3:PutObject",
-      "s3:GetObject",
       "s3:DeleteObject",
-      "s3:ListBucket"
     ]
     principals {
       type        = "AWS"
-      identifiers = [local.trust_principal]
+      identifiers = local.readwrite_principals
     }
     dynamic "condition" {
-      for_each = var.trust_tags
+      for_each = var.readwrite_tags
+
+      content {
+        test     = "StringEquals"
+        variable = "aws:PrincipalTag/${condition.key}"
+        values   = [condition.value]
+      }
+    }
+  }
+
+  statement {
+    sid       = "AllowRead"
+    resources = [local.bucket_arn, "${local.bucket_arn}/*"]
+    actions = [
+      "s3:GetObject",
+      "s3:ListBucket",
+    ]
+    principals {
+      type        = "AWS"
+      identifiers = local.read_principals
+    }
+    dynamic "condition" {
+      for_each = var.read_tags
 
       content {
         test     = "StringEquals"
@@ -208,10 +228,11 @@ data "aws_caller_identity" "this" {}
 data "aws_region" "this" {}
 
 locals {
-  account_arn     = "arn:aws:iam::${local.account_id}:root"
-  account_id      = data.aws_caller_identity.this.account_id
-  bucket_arn      = "arn:aws:s3:::${var.name}"
-  region          = data.aws_region.this.name
-  sid_suffix      = join("", regexall("[[:alnum:]]+", var.name))
-  trust_principal = coalesce(var.trust_principal, local.account_arn)
+  account_arn          = "arn:aws:iam::${local.account_id}:root"
+  account_id           = data.aws_caller_identity.this.account_id
+  bucket_arn           = "arn:aws:s3:::${var.name}"
+  region               = data.aws_region.this.name
+  sid_suffix           = join("", regexall("[[:alnum:]]+", var.name))
+  read_principals      = concat(var.read_principals, local.readwrite_principals)
+  readwrite_principals = coalescelist(var.readwrite_principals, [local.account_arn])
 }

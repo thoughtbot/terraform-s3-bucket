@@ -15,14 +15,26 @@ variable "tags" {
   default     = {}
 }
 
-variable "trust_principal" {
-  description = "Principal allowed to access the secret (default: current account)"
-  type        = string
-  default     = null
+variable "read_principals" {
+  description = "Principal allowed to read from the bucket (default: current account)"
+  type        = list(string)
+  default     = []
 }
 
-variable "trust_tags" {
-  description = "Tags required on principals accessing the secret"
+variable "read_tags" {
+  description = "Tags required on principals reading to the bucket"
+  type        = map(string)
+  default     = {}
+}
+
+variable "readwrite_principals" {
+  description = "Principal allowed to read and write to the bucket (default: current account)"
+  type        = list(string)
+  default     = []
+}
+
+variable "readwrite_tags" {
+  description = "Tags required on principals writing to the bucket"
   type        = map(string)
   default     = {}
 }

@@ -61,9 +61,11 @@ No modules.
 |------|-------------|------|---------|:--------:|
 | <a name="input_bucket_policy"></a> [bucket\_policy](#input\_bucket\_policy) | Override the resource policy on the bucket | `string` | `null` | no |
 | <a name="input_name"></a> [name](#input\_name) | The name of the s3 bucket | `string` | n/a | yes |
+| <a name="input_read_principals"></a> [read\_principals](#input\_read\_principals) | Principal allowed to read from the bucket (default: current account) | `list(string)` | `[]` | no |
+| <a name="input_read_tags"></a> [read\_tags](#input\_read\_tags) | Tags required on principals reading to the bucket | `map(string)` | `{}` | no |
+| <a name="input_readwrite_principals"></a> [readwrite\_principals](#input\_readwrite\_principals) | Principal allowed to read and write to the bucket (default: current account) | `list(string)` | `[]` | no |
+| <a name="input_readwrite_tags"></a> [readwrite\_tags](#input\_readwrite\_tags) | Tags required on principals writing to the bucket | `map(string)` | `{}` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | Tags to be applied to created resources | `map(string)` | `{}` | no |
-| <a name="input_trust_principal"></a> [trust\_principal](#input\_trust\_principal) | Principal allowed to access the secret (default: current account) | `string` | `null` | no |
-| <a name="input_trust_tags"></a> [trust\_tags](#input\_trust\_tags) | Tags required on principals accessing the secret | `map(string)` | `{}` | no |
 
 ## Outputs
 
